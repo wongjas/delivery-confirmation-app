@@ -1,3 +1,6 @@
+
+
+--- 
 # Bolt for Python Template App
 
 This is a generic Bolt for Python template app used to build out Slack apps.
