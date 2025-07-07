@@ -10,20 +10,31 @@ def delivery_message_callback(context: BoltContext, say: Say, logger: Logger):
             blocks=[
                 {
                     "type": "section",
-                    "text": {"type": "mrkdwn", "text": f"Delivery *{delivery_id}* has been submitted. Is this correct?"},
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": (f"Confirm *{delivery_id}* is correct?"),
+                    },
                 },
                 {
                     "type": "actions",
                     "elements": [
                         {
                             "type": "button",
-                            "text": {"type": "plain_text", "text": "Correct", "emoji": True},
+                            "text": {
+                                "type": "plain_text",
+                                "text": "Correct",
+                                "emoji": True,
+                            },
                             "style": "primary",
                             "action_id": "approve_delivery",
                         },
                         {
                             "type": "button",
-                            "text": {"type": "plain_text", "text": "Not correct", "emoji": True},
+                            "text": {
+                                "type": "plain_text",
+                                "text": "Not correct",
+                                "emoji": True,
+                            },
                             "style": "danger",
                             "action_id": "deny_delivery",
                         },

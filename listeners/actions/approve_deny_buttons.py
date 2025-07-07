@@ -10,7 +10,15 @@ def approve_delivery_callback(ack, body, client, logger: Logger):
         client.chat_update(
             channel=body["container"]["channel_id"],
             ts=body["container"]["message_ts"],
-            blocks=[{"type": "section", "text": {"type": "mrkdwn", "text": f"Processed delivery *{delivery_id}*..."}}],
+            blocks=[
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"Processed delivery *{delivery_id}*...",
+                    },
+                }
+            ],
         )
 
         client.views_open(
@@ -19,47 +27,65 @@ def approve_delivery_callback(ack, body, client, logger: Logger):
                 "type": "modal",
                 "callback_id": "approve_delivery_view",
                 "title": {"type": "plain_text", "text": "Approve Delivery"},
-                "private_metadata": f"{delivery_id}",  # Store delivery ID in private_metadata
+                "private_metadata": f"{delivery_id}",
                 "blocks": [
-                    {"type": "section", "text": {"type": "mrkdwn", "text": f"Approving delivery *{delivery_id}*"}},
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": f"Approving delivery *{delivery_id}*",
+                        },
+                    },
                     {
                         "type": "input",
-                        "block_id": "delivery_notes",
-                        "label": {"type": "plain_text", "text": "Additional delivery notes"},
+                        "block_id": "notes",
+                        "label": {
+                            "type": "plain_text",
+                            "text": "Additional delivery notes",
+                        },
                         "element": {
                             "type": "plain_text_input",
-                            "action_id": "delivery_notes_input",
+                            "action_id": "notes_input",
                             "multiline": True,
                             "placeholder": {
                                 "type": "plain_text",
-                                "text": "Enter any special instructions or notes about this delivery...",
+                                "text": "Add notes...",
                             },
                         },
                         "optional": True,
                     },
                     {
                         "type": "input",
-                        "block_id": "delivery_location",
-                        "label": {"type": "plain_text", "text": "Delivery Location"},
+                        "block_id": "location",
+                        "label": {
+                            "type": "plain_text",
+                            "text": "Delivery Location",
+                        },
                         "element": {
                             "type": "plain_text_input",
-                            "action_id": "delivery_location_input",
+                            "action_id": "location_input",
                             "placeholder": {
                                 "type": "plain_text",
-                                "text": "Enter the delivery address or location details...",
+                                "text": ("Enter the location details..."),
                             },
                         },
                         "optional": True,
                     },
                     {
                         "type": "input",
-                        "block_id": "delivery_channel",
-                        "label": {"type": "plain_text", "text": "Notification Channel"},
+                        "block_id": "channel",
+                        "label": {
+                            "type": "plain_text",
+                            "text": "Notification Channel",
+                        },
                         "element": {
                             "type": "channels_select",
-                            "action_id": "delivery_channel_select",
+                            "action_id": "channel_select",
                             "initial_channel": body["container"]["channel_id"],
-                            "placeholder": {"type": "plain_text", "text": "Select a channel for delivery notifications"},
+                            "placeholder": {
+                                "type": "plain_text",
+                                "text": ("Select channel for notifications"),
+                            },
                         },
                         "optional": False,
                     },
@@ -87,7 +113,7 @@ def deny_delivery_callback(ack, body, client, logger: Logger):
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": f"Delivery *{delivery_id}* was incorrect, please enter another delivery ID ❌",
+                        "text": f"Delivery *{delivery_id}* was incorrect ❌",
                     },
                 }
             ],
