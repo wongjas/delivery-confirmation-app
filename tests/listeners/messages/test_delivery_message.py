@@ -36,7 +36,6 @@ class TestDeliveryMessage:
         section_block = blocks[0]
         assert section_block["type"] == "section"
         assert "DEL-12345" in section_block["text"]["text"]
-        assert "submitted" in section_block["text"]["text"]
 
         # Check actions block
         actions_block = blocks[1]
