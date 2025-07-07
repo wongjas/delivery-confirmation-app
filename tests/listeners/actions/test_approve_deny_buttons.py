@@ -48,7 +48,7 @@ class TestApproveDeliveryCallback:
         self.fake_client.views_open.assert_called_once()
         views_open_args = self.fake_client.views_open.call_args.kwargs
         assert views_open_args["trigger_id"] == "156772938.1827394"
-        
+
         # Check modal structure
         view = views_open_args["view"]
         assert view["type"] == "modal"
@@ -56,22 +56,22 @@ class TestApproveDeliveryCallback:
         assert view["title"]["text"] == "Approve Delivery"
         assert view["private_metadata"] == "DEL-12345"
         assert len(view["blocks"]) == 4
-        
+
         # Check blocks structure
         blocks = view["blocks"]
         assert blocks[0]["type"] == "section"
         assert "DEL-12345" in blocks[0]["text"]["text"]
-        
+
         # Check notes input block
         assert blocks[1]["type"] == "input"
         assert blocks[1]["block_id"] == "notes"
         assert blocks[1]["optional"] is True
-        
+
         # Check location input block
         assert blocks[2]["type"] == "input"
         assert blocks[2]["block_id"] == "location"
         assert blocks[2]["optional"] is True
-        
+
         # Check channel select block
         assert blocks[3]["type"] == "input"
         assert blocks[3]["block_id"] == "channel"
@@ -82,7 +82,7 @@ class TestApproveDeliveryCallback:
     def test_approve_delivery_callback_different_delivery_id(self):
         """Test with a different delivery ID"""
         self.fake_body["message"]["text"] = "New delivery *DEL-67890* arrived"
-        
+
         approve_delivery_callback(
             ack=self.fake_ack,
             body=self.fake_body,
@@ -93,7 +93,7 @@ class TestApproveDeliveryCallback:
         # Verify the delivery ID is extracted correctly
         chat_update_args = self.fake_client.chat_update.call_args.kwargs
         assert "DEL-67890" in chat_update_args["blocks"][0]["text"]["text"]
-        
+
         views_open_args = self.fake_client.views_open.call_args.kwargs
         assert views_open_args["view"]["private_metadata"] == "DEL-67890"
 
@@ -129,7 +129,7 @@ class TestDenyDeliveryCallback:
         assert chat_update_args["channel"] == "C1234567890"
         assert chat_update_args["ts"] == "1234567890.123456"
         assert len(chat_update_args["blocks"]) == 1
-        
+
         # Check the updated message content
         updated_text = chat_update_args["blocks"][0]["text"]["text"]
         assert "DEL-12345" in updated_text
@@ -137,7 +137,7 @@ class TestDenyDeliveryCallback:
     def test_deny_delivery_callback_different_delivery_id(self):
         """Test with a different delivery ID"""
         self.fake_body["message"]["text"] = "New delivery *DEL-67890* has arrived"
-        
+
         deny_delivery_callback(
             ack=self.fake_ack,
             body=self.fake_body,
