@@ -1,6 +1,8 @@
 from logging import Logger
 import os
 
+from simple_salesforce import Salesforce
+
 
 def handle_approve_delivery_view(ack, client, view, logger: Logger):
     try:
@@ -19,21 +21,21 @@ def handle_approve_delivery_view(ack, client, view, logger: Logger):
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": (f"✅ Delivery *{delivery_id}* approved:"),
+                        "text": f"✅ Delivery *{delivery_id}* approved:",
                     },
                 },
                 {
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": (f"*Delivery Notes:*\n{notes or 'None'}"),
+                        "text": f"*Delivery Notes:*\n{notes or 'None'}",
                     },
                 },
                 {
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": (f"*Delivery Location:*\n{loc or 'None'}"),
+                        "text": f"*Delivery Location:*\n{loc or 'None'}",
                     },
                 },
             ],
@@ -44,8 +46,6 @@ def handle_approve_delivery_view(ack, client, view, logger: Logger):
 
         # Update Salesforce order object
         try:
-            from simple_salesforce import Salesforce
-
             sf = Salesforce(
                 username=os.environ.get("SF_USERNAME"),
                 password=os.environ.get("SF_PASSWORD"),
@@ -66,7 +66,7 @@ def handle_approve_delivery_view(ack, client, view, logger: Logger):
                 )
                 logger.info(f"Updated order {delivery_id}")
             else:
-                logger.warning(f"Noorder found for {delivery_id}")
+                logger.warning(f"No order found for {delivery_id}")
 
         except Exception as sf_error:
             logger.error(f"Update failed for order {delivery_id}: {sf_error}")

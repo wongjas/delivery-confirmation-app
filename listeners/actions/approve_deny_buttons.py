@@ -84,7 +84,7 @@ def approve_delivery_callback(ack, body, client, logger: Logger):
                             "initial_channel": body["container"]["channel_id"],
                             "placeholder": {
                                 "type": "plain_text",
-                                "text": ("Select channel for notifications"),
+                                "text": "Select channel for notifications",
                             },
                         },
                         "optional": False,

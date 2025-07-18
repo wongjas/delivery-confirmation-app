@@ -12,7 +12,7 @@ def delivery_message_callback(context: BoltContext, say: Say, logger: Logger):
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": (f"Confirm *{delivery_id}* is correct?"),
+                        "text": f"Confirm *{delivery_id}* is correct?",
                     },
                 },
                 {
