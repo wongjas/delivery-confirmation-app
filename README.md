@@ -1,6 +1,6 @@
 # Delivery Confirmation App
 
-You work for a large e-commerce company that employes many delivery workers.  Those delivery workers don't have access to a laptop when they're on the go but do have access to Slack on their mobile devices. This workshop will teach you how to create a simple Slack app that is geared towards these workers.  Delivery folks will enter order numbers on their mobile, along with some additional information about the order and have that information be sent to a channel in Slack as well as a system of record. In this workshop, we'll be using Salesforce as our system of record of choice. 
+You work for a large e-commerce company that employs many delivery workers. Those delivery workers don't have access to a laptop when they're on the go but do have access to Slack on their mobile devices. This workshop will teach you how to create a simple Slack app that is geared towards these workers. Delivery folks will enter order numbers on their mobile, along with some additional information about the order and have that information be sent to a channel in Slack as well as a system of record. In this workshop, we'll be using Salesforce as our system of record of choice. 
 
 In addition, you'll also learn how to use the [Bolt for Python template](https://github.com/slack-samples/bolt-python-starter-template) and cater it to your needs within this workshop. Note that this app is meant to be used for educational purposes and has not been tested rigorously enough to be used in production.
 
@@ -11,22 +11,29 @@ In addition, you'll also learn how to use the [Bolt for Python template](https:/
 - A testing workspace (get an Enterprise Grid sandbox for free by joining our [developer program](https://api.slack.com/developer-program))
 - [Bolt for Python](https://tools.slack.dev/bolt-python/)
 - [Simple Salesforce](https://github.com/simple-salesforce/simple-salesforce)
+- [Slack CLI](https://tools.slack.dev/slack-cli/guides/installing-the-slack-cli-for-mac-and-linux/)
 
 ## Final Product
 
 TODO: Make GIF of the final product (with the channel select)
 
-If you want to play with the final product and not have to go through the steps, the code for the final product can be found [here](https://github.com/wongjas/delivery-confirmation-app). Note that you will need to still create your app as well as generate the tokens.
+If you want to play with the final product and not have to go through the steps, the code for the final product can be found [here](https://github.com/wongjas/delivery-confirmation-app). Note that you will need to still create your app as well as generate the tokens (Steps 2, 3).
 
-## Cloning the Bolt for Python template and customizing it to your needs
+## 1. Installing the Slack CLI to clone the Bolt for Python template and customizing it to your needs
 
-1. First, clone the [Bolt for Python template](https://github.com/slack-samples/bolt-python-starter-template).
+1. Install the Slack CLI for a better developer experience from your terminal. Naigate to https://tools.slack.dev/slack-cli/guides/installing-the-slack-cli-for-mac-and-linux/ and follow the steps.
 
-2. Next, we'll remove the portions that we will not be using in this workshop.  From the `/listeners` folder, delete the `commands`, `events` and `shortcuts` folders. You can also do the same to the corresponding folders within the `/listeners/tests` folder as well.
+2. Once installed, use the command `slack create` and find the bolt-python-starter-template. Alternatively, you can clone the [Bolt for Python template](https://github.com/slack-samples/bolt-python-starter-template) using git.
 
-## Creating your app on api.slack.com
+3. Open your project, remove the portions that we will not be using in this workshop. From the `/listeners` folder, delete the `commands`, `events` and `shortcuts` folders. You can also do the same to the corresponding folders within the `/listeners/tests` folder as well.
 
-1. Use the contents of the `manifest.json` file below, which can also be found [here](https://github.com/wongjas/delivery-confirmation-app/blob/main/manifest.json). This file will describe all the metadata associated with your app, like its name, permissions that it requests among other things. Copy the contents and [create a new app](https://api.slack.com/apps/new). Next, choose `From a Manifest` and a workspace that you can develop on and paste the contents of `manifest.json` into the text box and follow the prompts. Customize your app with a name of your own instead of the default!
+## 2. Creating your app on api.slack.com
+
+1. We'll use the contents of the `manifest.json` file below, which can also be found [here](https://github.com/wongjas/delivery-confirmation-app/blob/main/manifest.json). This file will describe all the metadata associated with your app, like its name, permissions that it requests among other things.
+
+- Copy the contents and [create a new app](https://api.slack.com/apps/new).
+- Next, choose `From a Manifest` and a workspace that you can develop on (like your developer program's sandbox) and paste the contents of `manifest.json` into the text box and follow the prompts.
+- Customize your app with a name of your own instead of the default in the display_name field.
 
 ```json
 {
@@ -67,11 +74,11 @@ If you want to play with the final product and not have to go through the steps,
 }
 ```
 
-2. Once your app has been created, scroll down to `App-Level Tokens` and create a token that requests for the `connections:write` scope. This token will allow you to use [Socket Mode](https://docs.slack.dev/apis/events-api/using-socket-mode) which is a secure way to develop on Slack through the use of WebSockets. Save the value of your app token and store it in a safe place.
+2. Once your app has been created, scroll down to `App-Level Tokens` and create a token that requests for the `connections:write` scope. This token will allow you to use [Socket Mode](https://docs.slack.dev/apis/events-api/using-socket-mode) which is a secure way to develop on Slack through the use of WebSockets. Save the value of your app token and store it in a safe place (we'll use in the next step).
 
 3. Install your app by heading to `Install App` in the left sidebar. When you press `Allow`, this means you're agreeing to install your app with the permissions that it's requesting. Copy the bot token that you receive as well and store this in a safe place as well for subsequent steps.
 
-## Starting your app's server {#server}
+## 3. Starting your app's server {#server}
 
 1. Within a terminal of your choice, export the two tokens from the previous step using the commands below. Make sure not to mix these two up, `SLACK_APP_TOKEN` will start with `xapp-` and `SLACK_BOT_TOKEN` will start with `xoxp-`.
 
@@ -80,7 +87,7 @@ export SLACK_APP_TOKEN=<YOUR-APP-TOKEN-HERE>
 export SLACK_BOT_TOKEN=<YOUR-BOT-TOKEN-HERE>
 ```
 
-2. Activate a virtual environment for your python packages to be installed and then install the dependencies and start your app using the `python3 app.py` command.  You can find all those commands here:
+2. Activate a virtual environment for your python packages to be installed and then install the dependencies. Start your app using the `python3 app.py` command. You can find all those commands here:
 
 ```bash
 # Setup your python virtual environment
@@ -94,9 +101,9 @@ pip install -r requirements.txt
 python3 app.py
 ```
 
-3. Now that your app is running, you should be able to see it within Slack.  Create a channel that you can test in and try inviting your bot to it using the `/invite @Your-app-name-here` command. Check that your bot works by saying "hi" in the channel where your bot is and you should receive a message back from it. If you don't, take a step back to make sure you did all the steps above.
+3. Now that your app is running, you should be able to see it within Slack. In slack, create a channel that you can test in and try inviting your bot to it using the `/invite @Your-app-name-here` command. Check that your app works by saying "hi" in the channel where your app is and you should receive a message back from it. If you don't, take a step back to make sure you did all the steps above.
 
-# Let's start coding!
+## 4. Let's start coding!
 
 With all that preamble done, we can get to the main part of this workshop. There will be for major steps needed to get from the template to the finish line:
 
@@ -105,11 +112,11 @@ With all that preamble done, we can get to the main part of this workshop. There
 3. Handle when correct delivery IDs are sent and bring up a modal for more information
 4. Send the information to all the right places when the form is submitted (including third-party locations!)
 
-All of these steps will require you to use [Block Kit Builder](https://app.slack.com/block-kit-builder), a tool that helps you create messages, modals and other surfaces within Slack. Take a look and play around!
+All of these steps will require you to use [Block Kit Builder](https://app.slack.com/block-kit-builder), a tool that helps you create messages, modals and other surfaces within Slack. Open [Block Kit Builder](https://app.slack.com/block-kit-builder), take a look and play around! We'll create some views next.
 
-## Updating the "hi" message to something more interesting and interactive
+## 5. Updating the "hi" message to something more interesting and interactive
 
-1. The first thing we want to do is change the "hi, how are you?" message into something more useful. Here's [something that you can use](https://app.slack.com/block-kit-builder/#%7B%22blocks%22:%5B%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22Confirm%20*%7Bdelivery_id%7D*%20is%20correct?%22%7D%7D,%7B%22type%22:%22actions%22,%22elements%22:%5B%7B%22type%22:%22button%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Correct%22,%22emoji%22:true%7D,%22style%22:%22primary%22,%22action_id%22:%22approve_delivery%22%7D,%7B%22type%22:%22button%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Not%20correct%22,%22emoji%22:true%7D,%22style%22:%22danger%22,%22action_id%22:%22deny_delivery%22%7D%5D%7D%5D%7D) to start off with, but make it your own within Block Kit Builder. Once you're finished and have something that you like, copy the blocks by clicking the `Copy Payload` button in the top right.  
+1. The first thing we want to do is change the "hi, how are you?" message from our app into something more useful. Here's [something that you can use](https://app.slack.com/block-kit-builder/#%7B%22blocks%22:%5B%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22Confirm%20*%7Bdelivery_id%7D*%20is%20correct?%22%7D%7D,%7B%22type%22:%22actions%22,%22elements%22:%5B%7B%22type%22:%22button%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Correct%22,%22emoji%22:true%7D,%22style%22:%22primary%22,%22action_id%22:%22approve_delivery%22%7D,%7B%22type%22:%22button%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Not%20correct%22,%22emoji%22:true%7D,%22style%22:%22danger%22,%22action_id%22:%22deny_delivery%22%7D%5D%7D%5D%7D) to start off with, but make it your own within Block Kit Builder. Once you're finished and have something that you like, copy the blocks by clicking the `Copy Payload` button in the top right.  
 
 2. Take the function below and place your blocks within the blocks dictionary `[]` below.  Note that you will need to do some manipulation to the payload, like removing the initial `blocks` key and also convert any boolean `true` values to `True` to fit with Python conventions. Also, if you see variables within `{}` brackets, this part of an f-string, which allows you to insert variables within strings in a clean manner. You'll need to place the `f` character before these strings like this.  
 
@@ -136,7 +143,7 @@ def delivery_message_callback(context: BoltContext, say: Say, logger: Logger):
         logger.error(e)
 ```
 
-3. Next, you'll need to make some connections so that this function is actually called when a message is sent in the channel where your bot is. Head to `messages/__init__.py` and add the line shown below to the `register` function. Also, don't forget to add the import to the callback function as well!
+3. Next, you'll need to make some connections so that this function is actually called when a message is sent in the channel where your app is. Head to `messages/__init__.py` and add the line shown below to the `register` function. Also, don't forget to add the import to the callback function as well!
 
 ```python
 from .sample_message import delivery_message_callback ## import the function to this file
@@ -148,13 +155,13 @@ def register(app: App):
     app.message(re.compile(r"[A-Za-z]+-\d+"))(delivery_message_callback) ## add this line!
 ```
 
-4. Now, restart your server to bring in the new code and test that your function now works by sending in a order confirmation ID like "HWOA-1524". Your app should respond back with the message you created within Block Kit Builder.
+4. Now, restart your server to bring in the new code and test that your function now works by sending in a order confirmation ID like "HWOA-1524" in yiour testing channel. Your app should respond back with the message you created within Block Kit Builder.
 
-## Handle when wrong delivery ID button is pressed
+## 6. Handle when wrong delivery ID button is pressed
 
-You'll notice that if you try to click on either of the buttons within your message, nothing will happen.  This is because we have yet to create a function to handle the button press.  Let's start with the `Not correct` button first.
+You'll notice that if you try to click on either of the buttons within your message, nothing will happen. This is because we have yet to create a function to handle the button press. Let's start with the `Not correct` button first.
 
-1. In this first step, we'll head to our trusty old friend Block Kit Builder once again.  We want to build a message that lets the user know that the wrong ID has been submitted. Here's [something to get you started](https://app.slack.com/block-kit-builder/#%7B%22blocks%22:%5B%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22Delivery%20*%7Bdelivery_id%7D*%20was%20incorrect%20%E2%9D%8C%22%7D%7D%5D%7D).
+1. In this first step, we'll head to our trusty old friend Block Kit Builder once again. We want to build a message that lets the user know that the wrong order ID has been submitted. Here's [something to get you started](https://app.slack.com/block-kit-builder/#%7B%22blocks%22:%5B%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22Delivery%20*%7Bdelivery_id%7D*%20was%20incorrect%20%E2%9D%8C%22%7D%7D%5D%7D).
 
 2. Once you have something that you like, add it to the function below and place the function within the `actions/sample_action.py` file. Remember that you'll need to make any strings with variables into f-strings!
 
@@ -194,7 +201,7 @@ def register(app: App):
 
 And test out your code by sending in a confirmation number into your channel and clicking the `Not correct` button. If the message is updated, then you're good to go onto the next step.
 
-## Handle when correct delivery IDs are sent and bring up a modal for more information
+## 7. Handle when correct delivery IDs are sent and bring up a modal for more information
 
 You guessed it, the next step will be to handle the `Confirm` button. Though in this case, we're going to pull up a modal instead of just a message.
 
@@ -253,9 +260,9 @@ def register(app: App):
 
 4. Again, test your app by typing in a confirmation number in channel, click the confirm button and see if the modal comes up and you are able to capture information from the user.
 
-## Send the information to all the right places when the form is submitted (including third-party locations!)
+## 8. Send the information to all the right places when the form is submitted (including third-party locations!)
 
-Lastly, we'll handle the submission of the form, which will trigger two things. We want to send the information into the specified channel, which will let the user know that the form was successful as well as send the information into our system of record, Salesforce.
+Lastly, we'll handle the submission of the form, which will trigger two things. We want to send the information into the specified channel, which will let the user know that the form was successful (1) as well as send the information into our system of record, Salesforce (2).
 
 1. Here's a [simple example](https://app.slack.com/block-kit-builder/?1#%7B%22blocks%22:%5B%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22%E2%9C%85%20Delivery%20*%7Bdelivery_id%7D*%20approved:%22%7D%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Delivery%20Notes:*%5Cn%7Bnotes%20or%20'None'%7D%22%7D%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Delivery%20Location:*%5Cn%7Bloc%20or%20'None'%7D%22%7D%7D%5D%7D) of a message that you can use to present the information in channel. Modify it however you like and then place it within the code below in the `/views/sample_views.py` file.
 
@@ -295,7 +302,7 @@ def register(app: App):
 
 ```
 
-3. Let's also send the information to Salesforce as well. There's [several ways](https://github.com/simple-salesforce/simple-salesforce?tab=readme-ov-file#examples) for you to access Salesforce through its API but in this workshop, we've utilized username, password and token.  If you need help with getting your API token for SFDC, take a look at [this article](https://help.salesforce.com/s/articleView?id=xcloud.user_security_token.htm&type=5). You'll need to add these values as environment variables like we did earlier with our Slack tokens and you can use the following commands below:
+3. Let's also send the information to Salesforce. There's [several ways](https://github.com/simple-salesforce/simple-salesforce?tab=readme-ov-file#examples) for you to access Salesforce through its API but in this workshop, we've utilized username, password and token. If you need help with getting your API token for SFDC, take a look at [this article](https://help.salesforce.com/s/articleView?id=xcloud.user_security_token.htm&type=5). You'll need to add these values as environment variables like we did earlier (step 3) with our Slack tokens and you can use the following commands below:
 
 ```bash
 export SF_USERNAME=<YOUR-USERNAME>
@@ -341,8 +348,8 @@ export SF_TOKEN=<YOUR-SFDC-TOKEN>
         logger.error(f"Error in approve_delivery_view: {e}")
 ```
 
-5. Test your app one last time and you're done!
+# 9. Test your app 
 
-# Finish 
+Test your app one last time and you're done!
 
-Congratulations! You've built an app using [Bolt for Python](https://tools.slack.dev/bolt-python/) that allows you to send information into Slack as well as into a third-party service.  While there are more things that you can add to make this a more fully fledged app, we hope that this serves as a good introduction into connecting services like Salesforce using Slack as an conduit.
+Congratulations! You've built an app using [Bolt for Python](https://tools.slack.dev/bolt-python/) that allows you to send information into Slack as well as into a third-party service. While there are more things that you can add to make this a more fully fledged app, we hope that this serves as a good introduction into connecting services like Salesforce using Slack as an conduit.
