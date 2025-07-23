@@ -4,11 +4,11 @@
       "minor_version": 1
   },
   "display_information": {
-      "name": "Delivery Tracker App" 
+      "name": "Name your app here!" 
   },
   "features": {
       "bot_user": {
-          "display_name": "Delivery Tracker App",
+          "display_name": "Name your app here!",
           "always_online": false
       }
   },

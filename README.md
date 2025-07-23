@@ -80,7 +80,7 @@ If you want to play with the final product and not have to go through the steps,
 
 ## 3. Starting your app's server {#server}
 
-1. Within a terminal of your choice, export the two tokens from the previous step using the commands below. Make sure not to mix these two up, `SLACK_APP_TOKEN` will start with `xapp-` and `SLACK_BOT_TOKEN` will start with `xoxp-`.
+1. Within a terminal of your choice, export the two tokens from the previous step using the commands below. Make sure not to mix these two up, `SLACK_APP_TOKEN` will start with `xapp-` and `SLACK_BOT_TOKEN` will start with `xoxb-`.
 
 ```bash
 export SLACK_APP_TOKEN=<YOUR-APP-TOKEN-HERE>
@@ -149,7 +149,7 @@ def delivery_message_callback(context: BoltContext, say: Say, logger: Logger):
 from .sample_message import delivery_message_callback ## import the function to this file
 
 def register(app: App):
-    app.message(re.compile("(hi|hello|hey)"))(sample_message_callback)
+    app.message(re.compile("(hi|hello|hey)"))(sample_message_callback) # This can be deleted!
     # This regex will capture any number letters followed by dash 
     # and then any number of digits, our "confirmation number" e.g. ASDF-1234
     app.message(re.compile(r"[A-Za-z]+-\d+"))(delivery_message_callback) ## add this line!
@@ -190,12 +190,12 @@ This function will call the [`chat.update`](https://api.slack.com/methods/chat.u
 
 ```python
 from slack_bolt import App
-from .sample_action import sample_action_callback
+from .sample_action import sample_action_callback # This can be deleted
 from .sample_action import deny_delivery_callback
 
 
 def register(app: App):
-    app.action("sample_action_id")(sample_action_callback)
+    app.action("sample_action_id")(sample_action_callback) # This can be deleted
     app.action("deny_delivery")(deny_delivery_callback) # Add this line
 ```
 
@@ -247,13 +247,11 @@ def approve_delivery_callback(ack, body, client, logger: Logger):
 
 ```python
 from slack_bolt import App
-from .sample_action import sample_action_callback
 from .sample_action import deny_delivery_callback
 from .sample_action import approve_delivery_callback
 
 
 def register(app: App):
-    app.action("sample_action_id")(sample_action_callback)
     app.action("approve_delivery")(approve_delivery_callback)
     app.action("deny_delivery")(deny_delivery_callback)
 ```
@@ -297,7 +295,7 @@ from .sample_view import handle_approve_delivery_view
 
 
 def register(app: App):
-    app.view("sample_view_id")(sample_view_callback)
+    app.view("sample_view_id")(sample_view_callback) # This can be deleted
     app.view("approve_delivery_view")(handle_approve_delivery_view) ## Add this line
 
 ```
