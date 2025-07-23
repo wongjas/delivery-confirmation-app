@@ -33,7 +33,7 @@ If you want to play with the final product and not have to go through the steps,
 
 - Copy the contents and [create a new app](https://api.slack.com/apps/new).
 - Next, choose `From a Manifest` and a workspace that you can develop on (like your developer program's sandbox) and paste the contents of `manifest.json` into the text box and follow the prompts.
-- Customize your app with a name of your own instead of the default in the display_name field.
+- Customize your app with a name of your own instead of the default in the `display_name` field.
 
 ```json
 {
@@ -74,7 +74,7 @@ If you want to play with the final product and not have to go through the steps,
 }
 ```
 
-2. Once your app has been created, scroll down to `App-Level Tokens` and create a token that requests for the `connections:write` scope. This token will allow you to use [Socket Mode](https://docs.slack.dev/apis/events-api/using-socket-mode) which is a secure way to develop on Slack through the use of WebSockets. Save the value of your app token and store it in a safe place (we'll use in the next step).
+2. Once your app has been created, scroll down to `App-Level Tokens` and create a token that requests for the `connections:write` scope. This token will allow you to use [Socket Mode](https://docs.slack.dev/apis/events-api/using-socket-mode) which is a secure way to develop on Slack through the use of WebSockets. Save the value of your app token and store it in a safe place (we'll use it in the next step).
 
 3. Install your app by heading to `Install App` in the left sidebar. When you press `Allow`, this means you're agreeing to install your app with the permissions that it's requesting. Copy the bot token that you receive as well and store this in a safe place as well for subsequent steps.
 
@@ -101,7 +101,7 @@ pip install -r requirements.txt
 python3 app.py
 ```
 
-3. Now that your app is running, you should be able to see it within Slack. In slack, create a channel that you can test in and try inviting your bot to it using the `/invite @Your-app-name-here` command. Check that your app works by saying "hi" in the channel where your app is and you should receive a message back from it. If you don't, take a step back to make sure you did all the steps above.
+3. Now that your app is running, you should be able to see it within Slack. In Slack, create a channel that you can test in and try inviting your bot to it using the `/invite @Your-app-name-here` command. Check that your app works by saying "hi" in the channel where your app is and you should receive a message back from it. If you don't, take a step back to make sure you did all the steps above.
 
 ## 4. Let's start coding!
 
@@ -155,7 +155,7 @@ def register(app: App):
     app.message(re.compile(r"[A-Za-z]+-\d+"))(delivery_message_callback) ## add this line!
 ```
 
-4. Now, restart your server to bring in the new code and test that your function now works by sending in a order confirmation ID like "HWOA-1524" in yiour testing channel. Your app should respond back with the message you created within Block Kit Builder.
+4. Now, restart your server to bring in the new code and test that your function now works by sending in a order confirmation ID like "HWOA-1524" in your testing channel. Your app should respond back with the message you created within Block Kit Builder.
 
 ## 6. Handle when wrong delivery ID button is pressed
 
@@ -348,7 +348,7 @@ export SF_TOKEN=<YOUR-SFDC-TOKEN>
         logger.error(f"Error in approve_delivery_view: {e}")
 ```
 
-# 9. Test your app 
+## 9. Test your app 
 
 Test your app one last time and you're done!
 
