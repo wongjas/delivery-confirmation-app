@@ -21,11 +21,11 @@ If you want to play with the final product and not have to go through the steps,
 
 ## 1. Installing the Slack CLI to clone the Bolt for Python template and customizing it to your needs
 
-1. Install the Slack CLI for a better developer experience from your terminal. Naigate to https://tools.slack.dev/slack-cli/guides/installing-the-slack-cli-for-mac-and-linux/ and follow the steps.
+1. Install the Slack CLI for a better developer experience from your terminal. Navigate to https://tools.slack.dev/slack-cli/guides/installing-the-slack-cli-for-mac-and-linux/ and follow the steps.
 
 2. Once installed, use the command `slack create` and find the bolt-python-starter-template. Alternatively, you can clone the [Bolt for Python template](https://github.com/slack-samples/bolt-python-starter-template) using git.
 
-3. Open your project, remove the portions that we will not be using in this workshop. From the `/listeners` folder, delete the `commands`, `events` and `shortcuts` folders. You can also do the same to the corresponding folders within the `/listeners/tests` folder as well.
+3. This step is optional but you can remove the portions from the template that are not used within the workshop to make things a bit cleaner for yourself.  To do this, Open your project and delete the `commands`, `events` and `shortcuts` folders from the `/listeners` folder. You can also do the same to the corresponding folders within the `/listeners/tests` folder as well. You'll also need to remove the imports of these files from the `/listeners/__init__.py` file.
 
 ## 2. Creating your app on api.slack.com
 
@@ -33,7 +33,7 @@ If you want to play with the final product and not have to go through the steps,
 
 - Copy the contents and [create a new app](https://api.slack.com/apps/new).
 - Next, choose `From a Manifest` and a workspace that you can develop on (like your developer program's sandbox) and paste the contents of `manifest.json` into the text box and follow the prompts.
-- Customize your app with a name of your own instead of the default in the `display_name` field.
+- Customize your app with a name of your own instead of the default in the `display_name` and `name` fields.
 
 ```json
 {
@@ -265,12 +265,6 @@ Lastly, we'll handle the submission of the form, which will trigger two things. 
 1. Here's a [simple example](https://app.slack.com/block-kit-builder/?1#%7B%22blocks%22:%5B%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22%E2%9C%85%20Delivery%20*%7Bdelivery_id%7D*%20approved:%22%7D%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Delivery%20Notes:*%5Cn%7Bnotes%20or%20'None'%7D%22%7D%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Delivery%20Location:*%5Cn%7Bloc%20or%20'None'%7D%22%7D%7D%5D%7D) of a message that you can use to present the information in channel. Modify it however you like and then place it within the code below in the `/views/sample_views.py` file.
 
 ```python
-from logging import Logger
-import os
-
-from simple_salesforce import Salesforce
-
-
 def handle_approve_delivery_view(ack, client, view, logger: Logger):
     try:
         ack()
@@ -285,6 +279,9 @@ def handle_approve_delivery_view(ack, client, view, logger: Logger):
             channel=channel,
             blocks=[], ## Add your message here
         )
+
+    except Exception as e:
+        logger.error(f"Error in approve_delivery_view: {e}")
 ```
 
 2. Making the connections in the `/views/__init__.py` file, we can test that this works by sending a message once again in our test channel.
@@ -308,7 +305,7 @@ export SF_PASSWORD=<YOUR-PASSWORD>
 export SF_TOKEN=<YOUR-SFDC-TOKEN>
 ```
 
-4. We're going to use assume that order information is stored in the Order object and that the confirmation IDs map to the 8-digit Order numbers within Salesforce. Given that assumption, all we need to do is make a query to find the correct object, add the inputted information and we're done.  
+4. We're going to use assume that order information is stored in the Order object and that the confirmation IDs map to the 8-digit Order numbers within Salesforce. Given that assumption, all we need to do is make a query to find the correct object, add the inputted information and we're done. Place this code before the last `except` within the `/views/sample_views.py` file.
 
 ```python
         # Extract just the numeric portion from delivery_id
@@ -341,9 +338,19 @@ export SF_TOKEN=<YOUR-SFDC-TOKEN>
         except Exception as sf_error:
             logger.error(f"Update failed for order {delivery_id}: {sf_error}")
             # Continue execution even if Salesforce update fails
+```
 
-    except Exception as e:
-        logger.error(f"Error in approve_delivery_view: {e}")
+You'll also need to add the two imports that are found within this code to the top of the file as well
+
+```python
+import os
+from simple_salesforce import Salesforce
+```
+
+With these imports, you'll need to add `simple_salesforce` to your `requirements.txt` file and then install that package with the following command once again.
+
+```bash
+pip install -r requirements.txt
 ```
 
 ## 9. Test your app 
