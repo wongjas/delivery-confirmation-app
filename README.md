@@ -15,7 +15,8 @@ In addition, you'll also learn how to use the [Bolt for Python template](https:/
 
 ## Final Product
 
-TODO: Make GIF of the final product (with the channel select)
+![delivery](https://github.com/user-attachments/assets/702cacd5-3058-4dad-b286-78ad9d0d9aca)
+
 
 If you want to play with the final product and not have to go through the steps, the code for the final product can be found [here](https://github.com/wongjas/delivery-confirmation-app). Note that you will need to still create your app as well as generate the tokens (Steps 2, 3).
 
